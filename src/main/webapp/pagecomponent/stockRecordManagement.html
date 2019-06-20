@@ -1,0 +1,219 @@
+<!--<%@ page language="java" contentType="text/html; charset=UTF-8"-->
+<!--pageEncoding="UTF-8"%>-->
+
+<script>
+    //Параметры запроса
+    search_type = 'none'
+    search_repositoryID = ''
+    search_start_date = null
+    search_end_date = null
+
+    $(function(){
+        repositoryOptionInit();
+        datePickerInit();
+        storageListInit();
+        searchAction();
+    })
+
+    //Инициализация раскрывающегося списка
+	function repositoryOptionInit(){
+		$.ajax({
+			type : 'GET',
+			url : 'repositoryManage/getRepositoryList',
+			dataType : 'json',
+			contentType : 'application/json',
+			data:{
+				searchType : "searchAll",
+				keyWord : "",
+				offset : -1,
+				limit : -1
+			},
+			success : function(response){
+				$.each(response.rows,function(index,elem){
+					$('#search_repository_ID').append("<option value='" + elem.id + "'>" + elem.id +"Номер склада</option>");
+				})
+			},
+			error : function(response){
+			}
+		});
+		//$('#search_repository_ID').append("<option value='all'>Все склады</option>");
+	}
+
+	//Инициализация даты
+	function datePickerInit(){
+		$('.form_date').datetimepicker({
+			format:'yyyy-mm-dd',
+			language : 'zh-CN',
+			endDate : new Date(),
+			weekStart : 1,
+			todayBtn : 1,
+			autoClose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			forceParse : 0,
+			minView:2
+		});
+	}
+
+	//Инициализация таблицы化
+	function storageListInit() {
+		$('#stockRecords')
+				.bootstrapTable(
+						{
+							columns : [
+									{
+										field : 'recordID',
+										title : 'ID Записи'
+									//sortable: true
+									},
+									{
+										field : 'supplierOrCustomerName',
+										title : 'Название поставщика / клиента'
+									},
+									{
+										field : 'goodsName',
+										title : 'Название продукта'
+									},
+									{
+										field : 'repositoryID',
+										title : 'Исходящий / входящий ID склада',
+										//visible : false
+									},
+									{
+										field : 'number',
+										title : 'Количество',
+										//visible : false
+									},
+									{
+										field : 'time',
+										title : 'Дата'
+									},
+									{
+										field : 'personInCharge',
+										title : 'personInCharge'
+									},
+									{
+										field : 'type',
+										title : 'Тип записи'
+									}
+//									<!--,-->
+//									<!--{-->
+//										<!--field : 'operation',-->
+//										<!--title : 'Операция',-->
+//										<!--formatter : function(value, row, index) {-->
+//											<!--var s = '<button class="btn btn-info btn-sm edit"><span>Редактировать</span></button>';-->
+//											<!--var d = '<button class="btn btn-danger btn-sm delete"><span>Удалить</span></button>';-->
+//											<!--var fun = '';-->
+//											<!--return s + ' ' + d;-->
+//										<!--},-->
+//										<!--events : {-->
+//											<!--// Кнопка операция-->
+//											<!--'click .edit' : function(e, value,-->
+//													<!--row, index) {-->
+//												<!--//selectID = row.id;-->
+//												<!--rowEditOperation(row);-->
+//											<!--},-->
+//											<!--'click .delete' : function(e,-->
+//													<!--value, row, index) {-->
+//												<!--select_goodsID = row.goodsID;-->
+//												<!--select_repositoryID = row.repositoryID-->
+//												<!--$('#deleteWarning_modal').modal(-->
+//														<!--'show');-->
+//											<!--}-->
+//										<!--}-->
+//									<!--}-->
+									 ],
+							url : 'stockRecordManage/searchStockRecord',
+							method : 'GET',
+							queryParams : queryParams,
+							sidePagination : "server",
+							dataType : 'json',
+							pagination : true,
+							pageNumber : 1,
+							pageSize : 5,
+							pageList : [ 5, 10, 25, 50, 100 ],
+							clickToSelect : true
+						});
+	}
+
+	//реФРЭЭЭЩ таблици
+	function tableRefresh() {
+		$('#stockRecords').bootstrapTable('refresh', {
+			query : {}
+		});
+	}
+
+	//Параметр запроса
+	function queryParams(params) {
+		var temp = {
+			limit : params.limit,
+			offset : params.offset,
+			searchType : search_type,
+			repositoryID : search_repositoryID,
+			startDate : search_start_date,
+			endDate : search_end_date
+		}
+		return temp;
+	}
+
+	//Операция запроса
+	function searchAction(){
+	    $('#search_button').click(function(){
+	        search_repositoryID = $('#search_repository_ID').val();
+	        search_type = $('#search_type').val();
+	        search_start_date = $('#search_start_date').val();
+	        search_end_date = $('#search_end_date').val();
+	        tableRefresh();
+	    })
+	}
+</script>
+
+<div class="panel panel-default">
+    <ol class="breadcrumb">
+        <li>Бизнес поток</li>
+    </ol>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <form action="" class="form-inline">
+                    <div class="form-group">
+                        <label class="form-label">Номер склада：</label>
+                        <select class="form-control" id="search_repository_ID">
+                            <option value="">Выберите склад</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+                <div class="col-md-4">
+                    <form action="" class="form-inline">
+                        <label class="form-label">Фильтрация записей：</label>
+                        <select name="" id="search_type" class="form-control">
+                            <option value="all">Показать все</option>
+                            <option value="stockInOnly">Показывать только входящие записи</option>
+                            <option value="stockOutOnly">Показывать только записи библиотеки</option>
+                        </select>
+                    </form>
+                </div>
+            <div class="col-md-4">
+                <button class="btn btn-success" id="search_button">
+                    <span class="glyphicon glyphicon-search"></span> <span>Запрос</span>
+                </button>
+            </div>
+        </div>
+        <div class="row" style="margin-top:20px">
+            <div class="col-md-12">
+                <form action="" class="form-inline">
+                    <label class="form-label">Диапазон дат：</label>
+                    <input class="form_date form-control" value="" id="search_start_date" name="" placeholder="Дата начала">
+                    <label class="form-label">&nbsp;&nbsp;-&nbsp;&nbsp;</label>
+                    <input class="form_date form-control" value="" id="search_end_date" name="" placeholder="Дата окончания">
+                </form>
+            </div>
+        </div>
+        <div class="row" style="margin-top:50px">
+            <div class="col-md-12">
+                <table id="stockRecords" class="table table-striped"></table>
+            </div>
+        </div>
+    </div>
+</div>

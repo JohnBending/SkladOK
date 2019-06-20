@@ -1,0 +1,140 @@
+<!--<%@ page language="java" contentType="text/html; charset=UTF-8"-->
+<!--pageEncoding="UTF-8"%>-->
+
+<script>
+    search_access_type = 'all'
+    search_user_id = null
+    search_start_date = null
+    search_end_date = null
+
+    $(function(){
+        datePickerInit();
+        accessRecordTableInit();
+        searchActionInit();
+    })
+
+	function datePickerInit(){
+		$('.form_date').datetimepicker({
+			format:'yyyy-mm-dd',
+			language : 'ru-RU',
+			endDate : new Date(),
+			weekStart : 1,
+			todayBtn : 1,
+			autoClose : 1,
+			todayHighlight : 1,
+			startView : 2,
+			forceParse : 0,
+			minView:2
+		});
+	}
+
+	function accessRecordTableInit(){
+	    $('#accessRecordDOS').bootstrapTable({
+	        columns:[{
+	            field : 'id',
+	            title : 'ID Записи'
+	        },{
+	            field : 'userID',
+	            title : 'ID пользователя'
+	        },{
+	            field : 'userName',
+	            title : 'Имя пользователя'
+	        },{
+	            field : 'accessTime',
+	            title : 'Время'
+	        },{
+	            field : 'accessIP',
+	            title : 'IP'
+	        },{
+	            field : 'accessType',
+	            title : 'Тип'
+	        }],
+	        url : 'systemLog/getAccessRecords',
+	        method : 'GET',
+	        queryParams : queryParams,
+            sidePagination : "server",
+            dataType : 'json',
+            pagination : true,
+            pageNumber : 1,
+            pageSize : 5,
+            pageList : [ 5, 10, 25, 50, 100 ],
+            clickToSelect : true
+	    });
+	}
+
+	function tableRefresh() {
+		$('#accessRecordDOS').bootstrapTable('refresh', {
+			query : {}
+		});
+	}
+
+	function queryParams(params) {
+		var temp = {
+			limit : params.limit,
+			offset : params.offset,
+			userID : search_user_id,
+			accessType : search_access_type,
+			startDate : search_start_date,
+			endDate : search_end_date
+		}
+		return temp;
+	}
+
+    function searchActionInit(){
+        $('#search_button').click(function(){
+            search_user_id = $('#user_id').val();
+            search_access_type = $('#access_type').val();
+            search_start_date = $('#start_date').val();
+            search_end_date = $('#end_date').val();
+            tableRefresh();
+        })
+    }
+</script>
+
+<div class="panel panel-default">
+    <ol class="breadcrumb">
+        <li>Журнал входа в систему</li>
+    </ol>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-4">
+                <form action="" class="form-inline">
+                    <div class="form-group">
+                        <label class="form-label">ID пользователя：</label>
+                        <input type="text" id="user_id" class="form-control" placeholder="Укажите ID пользователя" style="width:50%">
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <form action="" class="form-inline">
+                    <label class="form-label">Фильтрация записей：</label>
+                    <select name="" id="access_type" class="form-control">
+                        <option value="all">Показать все</option>
+                        <option value="loginOnly">Показать только историю входа</option>
+                        <option value="logoutOnly">Показать только записи о выходе</option>
+                    </select>
+                </form>
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-success" id="search_button">
+                    <span class="glyphicon glyphicon-search"></span> <span>Поиск</span>
+                </button>
+            </div>
+        </div>
+        <div class="row" style="margin-top:20px">
+            <div class="col-md-7">
+                <form action="" class="form-inline">
+                    <label class="form-label">Диапазон дат：</label>
+                    <input class="form_date form-control" id="start_date" placeholder="Дата начала">
+                    <label class="form-label">&nbsp;&nbsp;-&nbsp;&nbsp;</label>
+                    <input class="form_date form-control" id="end_date" placeholder="Дата окончания">
+                </form>
+            </div>
+        </div>
+        <div class="row" style="margin-top:25px">
+            <div class="col-md-12">
+                <table class="table table-striped" id="accessRecordDOS"></table>
+            </div>
+        </div>
+    </div>
+</div>

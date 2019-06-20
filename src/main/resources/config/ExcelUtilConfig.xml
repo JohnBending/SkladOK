@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+	<entity class="com.ken.wms.domain.Supplier">
+		<property>
+			<field>name</field>
+			<value>Название поставщика</value>
+		</property>
+		<property>
+			<field>personInCharge</field>
+			<value>Ответственное лицо</value>
+		</property>
+		<property>
+			<field>tel</field>
+			<value>Контактный телефон</value>
+		</property>
+		<property>
+			<field>email</field>
+			<value>Электронная почта</value>
+		</property>
+		<property>
+			<field>address</field>
+			<value>Адресс</value>
+		</property>
+	</entity>
+	
+	<entity class="com.ken.wms.domain.Customer">
+		<property>
+			<field>name</field>
+			<value>Имя клиента</value>
+		</property>
+		<property>
+			<field>personInCharge</field>
+			<value>Ответственное лицо</value>
+		</property>
+		<property>
+			<field>tel</field>
+			<value>Котнактный телефон</value>
+		</property>
+		<property>
+			<field>email</field>
+			<value>Электронная почта</value>
+		</property>
+		<property>
+			<field>address</field>
+			<value>Адресс</value>
+		</property>
+	</entity>
+	
+	<entity class="com.ken.wms.domain.Goods">
+		<property>
+			<field>id</field>
+			<value>ID груза</value>
+		</property>
+		<property>
+			<field>name</field>
+			<value>Наименование товара</value>
+		</property>
+		<property>
+			<field>type</field>
+			<value>Тип товара</value>
+		</property>
+		<property>
+			<field>size</field>
+			<value>Спецификация</value>
+		</property>
+		<property>
+			<field>value</field>
+			<value>Стоймость товара</value>
+		</property>
+	</entity>
+	
+	<entity class="com.ken.wms.domain.Repository">
+		<property>
+			<field>id</field>
+			<value>ID Склада</value>
+		</property>
+		<property>
+			<field>address</field>
+			<value>Адресс склада</value>
+		</property>
+		<property>
+			<field>status</field>
+			<value>Состояние склада</value>
+		</property>
+		<property>
+			<field>area</field>
+			<value>Складская площадь</value>
+		</property>
+		<property>
+			<field>desc</field>
+			<value>Описание склада</value>
+		</property>
+		<property>
+			<field>adminID</field>
+			<value>ID администратора склада</value>
+		</property>
+		<property>
+			<field>adminName</field>
+			<value>Имя администратора склада</value>
+		</property>
+	</entity>
+	
+	<entity class="com.ken.wms.domain.RepositoryAdmin">
+		<property>
+			<field>id</field>
+			<value>ID</value>
+		</property>
+		<property>
+			<field>name</field>
+			<value>Полное имя</value>
+		</property>
+		<property>
+			<field>sex</field>
+			<value>Пол</value>
+		</property>
+		<property>
+			<field>tel</field>
+			<value>Контактный телефон</value>
+		</property>
+		<property>
+			<field>address</field>
+			<value>Адресс</value>
+		</property>
+		<property>
+			<field>birth</field>
+			<value>Дата рождения</value>
+		</property>
+		<property>
+			<field>repositoryBelongID</field>
+			<value>ID склада</value>
+		</property>
+	</entity>
+	<entity class="com.ken.wms.domain.Storage">
+		<property>
+			<field>goodsID</field>
+			<value>ID груза</value>
+		</property>
+		<property>
+			<field>goodsName</field>
+			<value>Наименование товара</value>
+		</property>
+		<property>
+			<field>goodsSize</field>
+			<value>Спецификация</value>
+		</property>
+		<property>
+			<field>goodsType</field>
+			<value>Тип товара</value>
+		</property>
+		<property>
+			<field>goodsValue</field>
+			<value>Стоимость товара</value>
+		</property>
+		<property>
+			<field>repositoryID</field>
+			<value>ID Склада</value>
+		</property>
+		<property>
+			<field>number</field>
+			<value>Количество на складе</value>
+		</property>
+	</entity>
+</configuration>
